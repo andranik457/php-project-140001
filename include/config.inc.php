@@ -16,12 +16,13 @@
         'params'    => ''
     ];
 
-    define('DB_MONGO_HOSTNAME',         json_encode($mongoHost));
+    define('DB_MONGO_HOSTNAME', json_encode($mongoHost));
 
     # Define databases
     define('DB_MONGO_FESTA', 'festa');
 
     define('FestaRate', 5);
+    define('OneMinute', 60);
 
     # define time zone
     date_default_timezone_set('UTC');

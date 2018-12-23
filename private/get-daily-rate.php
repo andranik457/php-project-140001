@@ -17,6 +17,10 @@
 
 }
 
+/**
+ * @param $currentDate
+ * @return bool
+ */
 function getExistRatesByDate($currentDate) {
     $festa = new CFesta();
 

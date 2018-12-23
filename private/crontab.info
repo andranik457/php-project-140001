@@ -1,0 +1,5 @@
+# check exchange rate every 5 minute
+*/5 * * * * php /var/www/festa-php/private/get-daily-rate.php
+# remove onHold places | preOrders
+*/10 * * * * php /var/www/festa-php/private/remove-pre-orders.php
+
