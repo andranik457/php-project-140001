@@ -7,8 +7,10 @@
     # PHP ini
     ini_set('memory_limit', '3072M');
 
+    define('DIR_ROOT',              '/var/www/festa-php/');
     define('DIR_INCLUDE',           '/var/www/festa-php/include/');
     define('DIR_LIBRARY',           '/var/www/festa-php/library/');
+    define('DIR_TMP',               '/tmp/');
 
     # DB Mongo
     $mongoHost = [
@@ -23,6 +25,7 @@
 
     define('FestaRate', 5);
     define('OneMinute', 60);
+    define('OneDay', 86400);
 
     # define time zone
     date_default_timezone_set('UTC');
