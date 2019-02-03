@@ -20,12 +20,14 @@
     foreach ($bookingOrdersInfo as $orderId => $orderInfo) {
         echo 'OrderId: ', $orderId, "\n";
 
-        $departureClassInfo = getBestMatchClassIdForSeatsBy($orderInfo['departureClassId'], $orderInfo['departureFlightId']);
-        $returnClassInfo = getBestMatchClassIdForSeatsBy($orderInfo['returnClassId'], $orderInfo['returnFlightId']);
-
         # 1. add to seats for departure class
         # 2. add to seats for return class
         # 3. update order status
+        # 4. add info to log (not implemented)
+        $logInfo = [];
+
+        # check departure info
+        $departureClassInfo = getBestMatchClassIdForSeatsBy($orderInfo['departureClassId'], $orderInfo['departureFlightId']);
 
         if ($departureClassInfo['sameClass']) {
             $filter = ['_id' => new \MongoDB\BSON\ObjectID($departureClassInfo['classId'])];
@@ -47,29 +49,47 @@
 
         $festa->update(Classes, $filter, $updateInfo);
 
-        ///////////////////
+        # set log data
+        $logInfo['departureInfo'] = [
+            'filter'        => $filter,
+            'updateInfo'    => $updateInfo
+        ];
 
-        if ($returnClassInfo['sameClass']) {
-            $filter = ['_id' => new \MongoDB\BSON\ObjectID($returnClassInfo['classId'])];
-            $updateInfo = [
-                '$inc' => [
-                    'availableSeats' => $orderInfo['usedSeats']
-                ]
+
+        # check isset return flight
+        if (isset($orderInfo['returnClassId'])) {
+            $returnClassInfo = getBestMatchClassIdForSeatsBy($orderInfo['returnClassId'], $orderInfo['returnFlightId']);
+
+            if ($returnClassInfo['sameClass']) {
+                $filter = ['_id' => new \MongoDB\BSON\ObjectID($returnClassInfo['classId'])];
+                $updateInfo = [
+                    '$inc' => [
+                        'availableSeats' => $orderInfo['usedSeats']
+                    ]
+                ];
+            }
+            else {
+                $filter = ['_id' => new \MongoDB\BSON\ObjectID($returnClassInfo['classId'])];
+                $updateInfo = [
+                    '$inc' => [
+                        'availableSeats' => $orderInfo['usedSeats'],
+                        'numberOfSeats' => $orderInfo['numberOfSeats']
+                    ]
+                ];
+            }
+
+            $festa->update(Classes, $filter, $updateInfo);
+
+            # set log data
+            $logInfo['returnInfo'] = [
+                'filter'        => $filter,
+                'updateInfo'    => $updateInfo
             ];
         }
-        else {
-            $filter = ['_id' => new \MongoDB\BSON\ObjectID($returnClassInfo['classId'])];
-            $updateInfo = [
-                '$inc' => [
-                    'availableSeats' => $orderInfo['usedSeats'],
-                    'numberOfSeats' => $orderInfo['numberOfSeats']
-                ]
-            ];
-        }
 
-        $festa->update(Classes, $filter, $updateInfo);
 
-        ///////////////////
+        /////////////////// update order
+
         $filter = ['_id' => new \MongoDB\BSON\ObjectID($orderId)];
         $updateInfo = [
             '$set' => [
@@ -79,9 +99,30 @@
         ];
 
         $festa->update(Orders, $filter, $updateInfo);
+
+        # set log data
+        $logInfo['returnInfo'] = [
+            'filter'        => $filter,
+            'updateInfo'    => $updateInfo
+        ];
+
+        # add info to logs collection
+        $logData = [
+            "userId" => "CronTab",
+            "action" => "Cancel Booking",
+            "oldData" => json_encode(['orderId' => $orderId]),
+            "newData" => json_encode($logInfo),
+            "createdAt" => time()
+        ];
+
+        $festa->insertOne(CollLogs, $logData);
     }
 }
 
+/**
+ * @param $checkDate
+ * @return array
+ */
 function getBookingOrdersByDate($checkDate) {
     $festa = new CFesta();
 
@@ -113,6 +154,11 @@ function getBookingOrdersByDate($checkDate) {
     return $expiredBookings;
 }
 
+/**
+ * @param $classId
+ * @param $flightId
+ * @return array
+ */
 function getBestMatchClassIdForSeatsBy($classId, $flightId) {
     $festa = new CFesta();
 

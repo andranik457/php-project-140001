@@ -7,5 +7,6 @@
     define('Flights',       'flights');
     define('Classes',       'classes');
     define('Orders',        'orders');
+    define('CollLogs',      'logs');
 
 }

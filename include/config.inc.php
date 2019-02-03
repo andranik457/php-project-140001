@@ -28,7 +28,7 @@
     define('OneDay', 86400);
 
     # define time zone
-    date_default_timezone_set('UTC');
+    date_default_timezone_set('Asia/Yerevan');
 
     # For mongoDB php7.* connection
     require_once(DIR_LIBRARY . 'mongo/vendor/autoload.php');
