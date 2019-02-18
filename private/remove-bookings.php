@@ -110,7 +110,10 @@
         $logData = [
             "userId" => "CronTab",
             "action" => "Cancel Booking",
-            "oldData" => json_encode(['orderId' => $orderId]),
+            "oldData" => json_encode([
+                'orderId'   => $orderId,
+                'pnr'       => $orderInfo['pnr']
+            ]),
             "newData" => json_encode($logInfo),
             "createdAt" => time()
         ];
@@ -140,9 +143,10 @@ function getBookingOrdersByDate($checkDate) {
         $orderId = (string)$order['_id'];
 
         $expiredBookings[$orderId] = [
-            'usedSeats' => $order['travelInfo']['usedSeats'],
+            'pnr'               => $order['pnr'],
+            'usedSeats'         => $order['travelInfo']['usedSeats'],
             'departureFlightId' => $order['travelInfo']['departureClassInfo']['flightId'],
-            'departureClassId' => $order['travelInfo']['departureClassInfo']['_id'],
+            'departureClassId'  => $order['travelInfo']['departureClassInfo']['_id'],
         ];
 
         if (isset($order['travelInfo']['returnClassInfo'])) {
