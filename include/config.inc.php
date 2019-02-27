@@ -8,8 +8,8 @@
     ini_set('memory_limit', '3072M');
 
     define('DIR_ROOT',              '/var/www/test-v101-php/');
-    define('DIR_INCLUDE',           '/var/www/test-v101/include/');
-    define('DIR_LIBRARY',           '/var/www/test-v101/library/');
+    define('DIR_INCLUDE',           '/var/www/test-v101-php/include/');
+    define('DIR_LIBRARY',           '/var/www/test-v101-php/library/');
     define('DIR_TMP',               '/tmp/');
 
     # DB Mongo
