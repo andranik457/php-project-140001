@@ -7,9 +7,9 @@
     # PHP ini
     ini_set('memory_limit', '3072M');
 
-    define('DIR_ROOT',              '/var/www/festa-php/');
-    define('DIR_INCLUDE',           '/var/www/festa-php/include/');
-    define('DIR_LIBRARY',           '/var/www/festa-php/library/');
+    define('DIR_ROOT',              '/var/www/test-v101-php/');
+    define('DIR_INCLUDE',           '/var/www/test-v101/include/');
+    define('DIR_LIBRARY',           '/var/www/test-v101/library/');
     define('DIR_TMP',               '/tmp/');
 
     # DB Mongo
@@ -21,7 +21,7 @@
     define('DB_MONGO_HOSTNAME', json_encode($mongoHost));
 
     # Define databases
-    define('DB_MONGO_FESTA', 'festa');
+    define('DB_MONGO_FESTA', 'testV101');
 
     define('FestaRate', 5);
     define('OneMinute', 60);
