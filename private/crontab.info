@@ -2,8 +2,12 @@
 */5 * * * * php /var/www/festa-php/private/get-daily-rate.php
 # remove onHold places | preOrders
 * * * * * php /var/www/festa-php/private/remove-pre-orders.php
-# make canceled bookings after 48 hours
-0 * * * * php /var/www/festa-php/private/remove-bookings.php
+# make canceled bookings after 45 hours
+* * * * * php /var/www/festa-php/private/remove-bookings.php
+# get daily rate for testDB
+*/20 * * * * php /var/www/test-v101-php/private/get-daily-rate.php
+# make daily dump
+0 1 * * * bash /var/www/festa-php/daily-dump.sh
 
 
 
