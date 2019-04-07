@@ -55,7 +55,10 @@ function saveNewRate($currentDate, $dailyCBRate) {
         $dailyRateInfo['cbRate'][$country] = round(floatval($rate), 2);
     }
 
-    $festa = new CFesta();
-    $festa->insertOne(ExchangeRate, $dailyRateInfo);
+    if (isset($dailyRateInfo['festaRate']['USD'])) {
+        $festa = new CFesta();
+        $festa->insertOne(ExchangeRate, $dailyRateInfo);
+    }
+
 }
 
